@@ -1,3 +1,11 @@
+如果下载项目到 MAC 里面， ng serve以后项目是 localhost:4200 ERR, 的一个空白页面，
+
+需要重置项目
+
+ng new angular2-simpli-start
+
+然后把相应的模块，手动的导入到相应的目录里面
+
 # Angular2SimpleStart
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.1.1.
