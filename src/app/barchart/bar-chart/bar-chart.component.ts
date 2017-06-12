@@ -97,6 +97,7 @@ export class D3BarChartComponent implements OnChanges {
         this.tooltip.transition()
           .duration(500)
           .style("opacity", .9);
+          
         this.tooltip.html("<strong>Name:</strong> <span style='color:blue'>" + d.letter + "</span><br/>" +
           "<strong>" + d.frequency + ": </strong> <br/>")
           .style("left", (d3.event.pageX) + "px")
