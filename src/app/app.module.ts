@@ -7,10 +7,13 @@ import { BsDropdownModule } from 'ng2-bootstrap/dropdown';
 import { TabsModule } from 'ng2-bootstrap/tabs';
 import { NAV_DROPDOWN_DIRECTIVES } from './shared/nav-dropdown.directive';
 
+import { HttpModule } from '@angular/http';
+
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { SIDEBAR_TOGGLE_DIRECTIVES } from './shared/sidebar.directive';
 import { AsideToggleDirective } from './shared/aside.directive';
 import { BreadcrumbsComponent } from './shared/breadcrumb.component';
+import { CoreModule } from "./core/core.module";
 
 // Routing Module
 import { AppRoutingModule } from './app.routing';
@@ -24,7 +27,10 @@ import { FullLayoutComponent } from './layouts/full-layout.component';
     AppRoutingModule,
     BsDropdownModule.forRoot(),
     TabsModule.forRoot(),
-    ChartsModule
+
+    HttpModule,
+    ChartsModule,
+    CoreModule
   ],
   declarations: [
     AppComponent,
@@ -38,6 +44,6 @@ import { FullLayoutComponent } from './layouts/full-layout.component';
     provide: LocationStrategy,
     useClass: HashLocationStrategy
   }],
-  bootstrap: [ AppComponent ]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

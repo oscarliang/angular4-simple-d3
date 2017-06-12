@@ -21,6 +21,14 @@ export const routes: Routes = [
         path: 'dashboard',
         loadChildren: './dashboard/dashboard.module#DashboardModule'
       },
+      {
+        path: 'linechart',
+        loadChildren: './linechart/linechart.module#LineChartModule'
+      },
+      {
+        path: 'multilinechart',
+        loadChildren: './multilinechart/multilinechart.module#MultiLineChartModule'
+      }
     ]
   }
 ];
