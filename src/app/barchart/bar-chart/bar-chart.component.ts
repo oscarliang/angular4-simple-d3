@@ -1,11 +1,6 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { Router } from '@angular/router';
-import * as d3 from 'd3-selection';
-import * as d3Scale from "d3-scale";
-import * as d3Shape from "d3-shape";
-import * as d3Array from "d3-array";
-import * as d3Axis from "d3-axis";
-import * as d3TimeFormate from "d3-time-format";
+import * as d3 from 'd3';
 
 @Component({
   selector: 'd3-bar-chart',
@@ -25,6 +20,7 @@ export class D3BarChartComponent implements OnChanges {
   private y: any;
   private svg: any;
   private g: any;
+  private tooltip: any;
 
   constructor() {
     this.width = 900 - this.margin.left - this.margin.right;
@@ -33,21 +29,19 @@ export class D3BarChartComponent implements OnChanges {
 
   ngOnChanges(changes) {
     if (changes.data.currentValue) {
-      // this.formateData();
-
       this.initSvg()
       this.initAxis();
+      this.initTooltip();
       this.drawAxis();
       this.drawBars();
     }
   }
 
-  private formateData() {
-    var parseTime = d3TimeFormate.timeParse("%Y-%m-%dT%H:%M:%S.%LZ");
-    this.data.map((item) => {
-      item.date = parseTime(item.date);
-    })
-    // console.log(this.data);
+  private initTooltip() {
+    // Define the div for the tooltip
+    this.tooltip = d3.select("body").append("div")
+      .attr("class", "tooltip")
+      .style("opacity", 0);
   }
 
   private initSvg() {
@@ -59,20 +53,28 @@ export class D3BarChartComponent implements OnChanges {
   }
 
   private initAxis() {
-    this.x = d3Scale.scaleBand().rangeRound([0, this.width]).padding(0.1);
-    this.y = d3Scale.scaleLinear().rangeRound([this.height, 0]);
+    this.x = d3.scaleBand().rangeRound([0, this.width]).padding(0.1);
+    this.y = d3.scaleLinear().rangeRound([this.height, 0]);
     this.x.domain(this.data.map((d) => d.letter));
-    this.y.domain([0, d3Array.max(this.data, (d) => d.frequency)]);
+    this.y.domain([0, d3.max(this.data, (d) => d.frequency)]);
+  }
+
+  private Y0() {
+    return this.y(0);
+  }
+
+  private Y(d) {
+    return this.y(d.frequency);
   }
 
   private drawAxis() {
     this.g.append("g")
       .attr("class", "axis axis--x")
       .attr("transform", "translate(0," + this.height + ")")
-      .call(d3Axis.axisBottom(this.x));
+      .call(d3.axisBottom(this.x));
     this.g.append("g")
       .attr("class", "axis axis--y")
-      .call(d3Axis.axisLeft(this.y).ticks(10, "%"))
+      .call(d3.axisLeft(this.y).ticks(10, "%"))
       .append("text")
       .attr("class", "axis-title")
       .attr("transform", "rotate(-90)")
@@ -88,8 +90,29 @@ export class D3BarChartComponent implements OnChanges {
       .enter().append("rect")
       .attr("class", "bar")
       .attr("x", (d) => this.x(d.letter))
-      .attr("y", (d) => this.y(d.frequency))
+      .attr("y", (d) => this.Y0())
       .attr("width", this.x.bandwidth())
-      .attr("height", (d) => this.height - this.y(d.frequency));
+      .attr("height", 0)
+      .on('mouseover', (d) => {
+        this.tooltip.transition()
+          .duration(500)
+          .style("opacity", .9);
+        this.tooltip.html("<strong>Name:</strong> <span style='color:blue'>" + d.letter + "</span><br/>" +
+          "<strong>" + d.frequency + ": </strong> <br/>")
+          .style("left", (d3.event.pageX) + "px")
+          .style("top", (d3.event.pageY - 28) + "px");
+      })
+      .on('mouseout', () => {
+        this.tooltip.transition()
+          .duration(500)
+          .style("opacity", 0);
+      })
+      .transition()
+      .duration(1000)
+      .delay(100)
+      .attr("y",  (d) => {
+          return d.frequency < 0 ? this.Y0() : this.Y(d);
+      })
+      .attr("height", (d) => Math.abs(this.Y(d)-this.Y0()))
   }
 }
