@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { LineChartComponent } from './linechart.component';
+import { BarChartComponent } from './barchart.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: LineChartComponent,
+    component: BarChartComponent,
     data: {
-      title: 'LineChart'
+      title: 'BarChart'
     }
   }
 ];
@@ -17,4 +17,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class LineChartRoutingModule {}
+export class BarChartRoutingModule {}

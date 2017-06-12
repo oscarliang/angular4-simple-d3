@@ -6,25 +6,25 @@ import * as d3Shape from "d3-shape";
 import * as d3Array from "d3-array";
 import * as d3Axis from "d3-axis";
 import * as d3TimeFormate from "d3-time-format";
-// import { Stocks } from '../data';
 
 @Component({
-  selector: 'd3-line-chart',
-  templateUrl: 'line-chart.component.html'
+  selector: 'd3-bar-chart',
+  templateUrl: 'bar-chart.component.html'
 })
-export class D3LineChartComponent implements OnChanges {
+export class D3BarChartComponent implements OnChanges {
 
-  title: string = 'D3.js with Angular 2!';
-  subtitle: string = 'Line Chart';
+  title = 'D3.js with Angular 2!';
+  subtitle = 'Bar Chart';
   @Input() public data: any;
 
-  private margin = { top: 20, right: 20, bottom: 30, left: 50 };
   private width: number;
   private height: number;
+  private margin = { top: 20, right: 20, bottom: 30, left: 40 };
+
   private x: any;
   private y: any;
   private svg: any;
-  private line: d3Shape.Line<[number, number]>;
+  private g: any;
 
   constructor() {
     this.width = 900 - this.margin.left - this.margin.right;
@@ -33,11 +33,12 @@ export class D3LineChartComponent implements OnChanges {
 
   ngOnChanges(changes) {
     if (changes.data.currentValue) {
-      this.formateData();
+      // this.formateData();
+
       this.initSvg()
       this.initAxis();
       this.drawAxis();
-      this.drawLine();
+      this.drawBars();
     }
   }
 
@@ -50,45 +51,45 @@ export class D3LineChartComponent implements OnChanges {
   }
 
   private initSvg() {
-    this.svg = d3.select("svg")
-      .append("g")
+    this.svg = d3.select("svg");
+    this.width = +this.svg.attr("width") - this.margin.left - this.margin.right;
+    this.height = +this.svg.attr("height") - this.margin.top - this.margin.bottom;
+    this.g = this.svg.append("g")
       .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");;
   }
 
   private initAxis() {
-    this.x = d3Scale.scaleTime().range([0, this.width]);
-    this.y = d3Scale.scaleLinear().range([this.height, 0]);
-    this.x.domain(d3Array.extent(this.data, (d) => (d.date)));
-    this.y.domain(d3Array.extent(this.data, (d) => d.value));
+    this.x = d3Scale.scaleBand().rangeRound([0, this.width]).padding(0.1);
+    this.y = d3Scale.scaleLinear().rangeRound([this.height, 0]);
+    this.x.domain(this.data.map((d) => d.letter));
+    this.y.domain([0, d3Array.max(this.data, (d) => d.frequency)]);
   }
 
   private drawAxis() {
-
-    this.svg.append("g")
+    this.g.append("g")
       .attr("class", "axis axis--x")
       .attr("transform", "translate(0," + this.height + ")")
       .call(d3Axis.axisBottom(this.x));
-
-    this.svg.append("g")
+    this.g.append("g")
       .attr("class", "axis axis--y")
-      .call(d3Axis.axisLeft(this.y))
+      .call(d3Axis.axisLeft(this.y).ticks(10, "%"))
       .append("text")
       .attr("class", "axis-title")
       .attr("transform", "rotate(-90)")
       .attr("y", 6)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .text("Price ($)");
+      .attr("dy", "0.71em")
+      .attr("text-anchor", "end")
+      .text("Frequency");
   }
 
-  private drawLine() {
-    this.line = d3Shape.line()
-      .x((d: any) => this.x(d.date))
-      .y((d: any) => this.y(d.value));
-
-    this.svg.append("path")
-      .datum(this.data)
-      .attr("class", "line")
-      .attr("d", this.line);
+  private drawBars() {
+    this.g.selectAll(".bar")
+      .data(this.data)
+      .enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", (d) => this.x(d.letter))
+      .attr("y", (d) => this.y(d.frequency))
+      .attr("width", this.x.bandwidth())
+      .attr("height", (d) => this.height - this.y(d.frequency));
   }
 }

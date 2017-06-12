@@ -28,6 +28,14 @@ export const routes: Routes = [
       {
         path: 'multilinechart',
         loadChildren: './multilinechart/multilinechart.module#MultiLineChartModule'
+      },
+      {
+        path: 'barchart',
+        loadChildren: './barchart/barchart.module#BarChartModule'
+      },
+      {
+        path: 'piechart',
+        loadChildren: './piechart/piechart.module#PieChartModule'
       }
     ]
   }
