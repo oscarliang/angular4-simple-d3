@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from "rxjs/Rx";
 import { Router } from '@angular/router';
 import { Stocks } from '../data';
@@ -8,7 +8,7 @@ import { JsonApiService } from "../core/api/json-api.service";
 @Component({
   templateUrl: 'linechart.component.html'
 })
-export class LineChartComponent implements OnInit {
+export class LineChartComponent implements OnInit, OnDestroy {
 
   public data: any;
   public lineChartDataSub: Subscription;
@@ -27,5 +27,9 @@ export class LineChartComponent implements OnInit {
 
   getLineChartData(): Observable<any> {
     return this.jsonApiService.fetch('/linechart.json')
+  }
+
+  ngOnDestroy() {
+    this.lineChartDataSub.unsubscribe();
   }
 }

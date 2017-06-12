@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from "rxjs/Rx";
 import { Router } from '@angular/router';
 import { Stats } from '../data';
@@ -8,7 +8,7 @@ import { JsonApiService } from "../core/api/json-api.service";
 @Component({
   templateUrl: 'piechart.component.html'
 })
-export class PieChartComponent implements OnInit {
+export class PieChartComponent implements OnInit, OnDestroy {
 
   public data: any;
   public pieChartDataSub: Subscription;
@@ -29,5 +29,9 @@ export class PieChartComponent implements OnInit {
 
   getPieChartData(): Observable<any> {
     return this.jsonApiService.fetch('/piechart.json')
+  }
+
+  ngOnDestroy() {
+    this.pieChartDataSub.unsubscribe();
   }
 }
