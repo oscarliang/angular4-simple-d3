@@ -1,22 +1,15 @@
-如果下载项目到 MAC 里面， ng serve以后项目是 localhost:4200 ERR, 的一个空白页面，
 
-需要重置项目
-
-ng new angular2-simpli-start
-
-然后把相应的模块，手动的导入到相应的目录里面
-
-# Angular2SimpleStart
+# Angular2D3SimpleStart
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.1.1.
 
+# Install
+
+Run `npm install`
+
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|module`.
+Run `npm run start` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 ## Build
 
@@ -33,4 +26,3 @@ Before running the tests make sure you are serving the app via `ng serve`.
 
 ## Further help
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
