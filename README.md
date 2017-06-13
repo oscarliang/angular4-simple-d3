@@ -1,5 +1,5 @@
 
-# Angular2D3SimpleStart
+# Angular4-D3-Simple-Start
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.1.1.
 
